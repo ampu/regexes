@@ -1,0 +1,18 @@
+name: deploy-to-gh-pages
+on: [push]
+jobs:
+  deploy-to-gh-pages:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - uses: actions/checkout@v2.3.1
+
+      - run: npm ci && npm test && npm run build:gh-pages
+
+      - uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: build

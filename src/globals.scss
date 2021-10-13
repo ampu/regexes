@@ -1,0 +1,54 @@
+.page {
+  height: 100%;
+
+  scroll-behavior: smooth;
+}
+
+.page-body {
+  height: 100%;
+
+  font-family: "roboto", "arial", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 400;
+
+  color: $primary-color;
+
+  &--active {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &--modal {
+    overflow: hidden;
+  }
+
+  &--mobile-modal {
+    @include mobile {
+      overflow: hidden;
+    }
+  }
+}
+
+.page-layout {
+  min-width: $min-viewport--mobile;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.page-main {
+  padding-bottom: 107px;
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+.bounce {
+  animation: bounce 0.6s;
+}
+
+.shake {
+  animation: shake 0.6s;
+}

@@ -1,0 +1,7 @@
+/* stylelint-disable at-rule-no-unknown */
+
+@function rubber--desktop($size) {
+  @return percentage($size / $max-content-width--desktop);
+}
+
+/* stylelint-enable at-rule-no-unknown */

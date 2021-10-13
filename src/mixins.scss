@@ -1,0 +1,96 @@
+@mixin tablet {
+  @media (min-width: $min-viewport--tablet) and (max-width: $max-viewport--tablet) {
+    @content;
+  }
+}
+
+@mixin tablet-mobile {
+  @media (max-width: $max-viewport--tablet) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $max-viewport--mobile) {
+    @content;
+  }
+}
+
+@mixin container {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+
+  max-width: $max-viewport--desktop;
+  min-width: $min-viewport--desktop - $scroll-width;
+  padding-left: $side-padding--desktop;
+  padding-right: $side-padding--desktop;
+
+  @include tablet {
+    max-width: $max-viewport--tablet;
+    min-width: $min-viewport--tablet;
+    padding-left: $side-padding--tablet;
+    padding-right: $side-padding--tablet;
+  }
+
+  @include mobile {
+    max-width: $max-viewport--mobile;
+    min-width: $min-viewport--mobile;
+    padding-left: $side-padding--mobile;
+    padding-right: $side-padding--mobile;
+  }
+}
+
+@mixin button {
+  cursor: pointer;
+  color: $alternative-color;
+  background-color: $primary-active-color;
+  border: none;
+  border-radius: 4px;
+
+  &:hover {
+    color: $alternative-color;
+    background-color: $primary-color;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px $alternative-color, 0 0 0 4px $primary-active-color;
+
+    &:hover {
+      box-shadow: 0 0 0 2px $alternative-color, 0 0 0 4px $primary-color;
+    }
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  border: none;
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+}
+
+@mixin outline {
+  box-shadow: 0 0 0 2px $primary-outline-color, 0 0 0 3px $secondary-outline-color;
+}
+
+@mixin thin-outline {
+  box-shadow: 0 0 0 1px $primary-outline-color, 0 0 0 2px $secondary-outline-color;
+}
+
+@mixin dangerous-outline {
+  box-shadow: 0 0 0 2px $dangerous-outline-color, 0 0 0 3px $secondary-outline-color;
+}

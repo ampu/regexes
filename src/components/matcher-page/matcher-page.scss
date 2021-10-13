@@ -1,0 +1,40 @@
+.matcher-page {
+  @include container;
+
+  flex-grow: 1;
+  padding: 60px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.matcher-page h1 {
+  margin: 0;
+  margin-bottom: 20px;
+
+  font-weight: 700;
+  font-size: 41px;
+
+  @include mobile {
+    font-size: 26px;
+  }
+}
+
+.matcher-page a {
+  @include button;
+
+  display: flex;
+  justify-content: center;
+  padding: 14px 35px;
+
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+
+  @include mobile {
+    padding: 10px 25px;
+
+    font-size: 14px;
+  }
+}
