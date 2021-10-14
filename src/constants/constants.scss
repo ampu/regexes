@@ -1,8 +1,7 @@
 $scroll-width: 20px;
-$max-content-width--desktop: 1170px;
-$side-padding--desktop: 4%;
-$min-viewport--desktop: 1024px;
-$max-viewport--desktop: calc(#{$max-content-width--desktop} + #{2 * $side-padding--desktop});
+$side-padding--desktop: 30px;
+$min-viewport--desktop: 960px;
+$max-viewport--desktop: 2000px;
 
 $max-viewport--tablet: $min-viewport--desktop - 1px;
 $min-viewport--tablet: 768px;
@@ -16,8 +15,7 @@ $side-padding--mobile: outer-rubber--mobile(15px);
 
 $white-color: #ffffff;
 $black-color: #000000;
-$red-color: #ff0000;
-$pastel-red-color: rgba(255, 0, 0, 0.1);
+$disabled-color: #aaaaaa;
 
 $primary-color: #1f1e25;
 $primary-active-color: #2c36f2;

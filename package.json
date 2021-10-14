@@ -8,7 +8,7 @@
     "build:gh-pages": "PUBLIC_URL=/regexes react-scripts build",
     "test": "npm run editorconfig && npm run stylelint && npm run eslint",
     "editorconfig": "editorconfig-cli",
-    "stylelint": "stylelint '../src/**/*.scss' --syntax scss",
+    "stylelint": "stylelint 'src/**/*.scss' --syntax scss",
     "eslint": "eslint --ext .jsx --ext .js src"
   },
   "editorconfig-cli": [

@@ -5,7 +5,7 @@
   padding: 60px;
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -21,12 +21,15 @@
   }
 }
 
-.matcher-page a {
+.matcher-page button {
   @include button;
 
   display: flex;
   justify-content: center;
-  padding: 14px 35px;
+  padding: 10px 35px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  width: 100%;
 
   font-weight: 700;
   font-size: 16px;
@@ -37,4 +40,66 @@
 
     font-size: 14px;
   }
+}
+
+.matcher-page form {
+  width: 80%;
+}
+
+.matcher-page__item {
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  flex-flow: column;
+
+  border: none;
+}
+
+.matcher-page__item-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.matcher-page input {
+  font-size: 16px;
+}
+
+.matcher-page textarea {
+  font-size: 16px;
+  resize: vertical;
+}
+
+.matcher-page__checkbox-label {
+  cursor: pointer;
+}
+
+.matcher-page__pattern-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &::before,
+  &::after {
+    content: "/";
+    margin-right: 5px;
+    margin-left: 5px;
+
+    font-size: 24px;
+    color: $disabled-color;
+  }
+}
+
+.matcher-page__pattern-inner input {
+  display: block;
+  width: 100%;
+}
+
+.matcher-page label {
+  display: flex;
+  align-items: center;
+}
+
+.matcher-page [type="checkbox"] {
+  margin-right: 10px;
 }

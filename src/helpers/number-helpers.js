@@ -7,14 +7,6 @@ import 'dayjs/locale/ru';
 
 const FORMAT_FLOOR_CEILING_MULTIPLIER = 100;
 
-const RUBLES_SUFFIX_DATA = {
-  hundredDivisor: 100,
-  hundredRange: {min: 11, max: 14},
-  tenDivisor: 10,
-  singularTenRange: {min: 1, max: 1},
-  exceptionalTenRange: {min: 2, max: 4},
-};
-
 const formatInteger = (value) => {
   return integerFormat.format(Math.ceil(value));
 };

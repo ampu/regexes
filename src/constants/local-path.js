@@ -1,5 +1,6 @@
 /** @enum */
 export const LocalPath = {
   INDEX: `/`,
-  MATCHER: `/`
+  MATCHER: `/`,
+  MATCH_ALL: `/match-all`
 };
