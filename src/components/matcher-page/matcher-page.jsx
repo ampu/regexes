@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {LocalPath} from 'constants/local-path';
+import {localMatchAll} from 'helpers/match-helpers';
+import {matchProvider} from 'providers/match-provider';
 
 /** @enum */
 const Engine = {
@@ -11,7 +13,6 @@ const Engine = {
   NODE_JS: {
     title: `JavaScript (node.js)`,
     value: `node-js`,
-    disabled: true,
   },
   PHP: {
     title: `PHP`,
@@ -49,7 +50,7 @@ const createToggle = (Enumeration, toggledItem) => {
 };
 
 const MatcherPage = () => {
-  const [engines, setEngines] = React.useState([Engine.BROWSER_JS]);
+  const [engines, setEngines] = React.useState([Engine.NODE_JS]);
   const [text, setText] = React.useState(``);
   const [pattern, setPattern] = React.useState(``);
   const [flags, setFlags] = React.useState([]);
@@ -57,11 +58,9 @@ const MatcherPage = () => {
   const [matches, setMatches] = React.useState([]);
   const [error, setError] = React.useState();
 
-  /* eslint-disable no-unused-vars */
   const onEnginesChange = (toggledEngine) => {
     setEngines(createToggle(Engine, toggledEngine));
   };
-  /* eslint-enable no-unused-vars */
 
   const onFlagsChange = (toggledFlag) => {
     setFlags(createToggle(Flag, toggledFlag));
@@ -73,15 +72,29 @@ const MatcherPage = () => {
     setError();
     setMatches([]);
 
-    try {
-      const regexp = new RegExp(pattern, `g` + flags.map((flag) => flag.value).join(``));
-      const it = text.matchAll(regexp);
-      setMatches(Array.from(it));
-    } catch (exception) {
-      setError(exception);
+    const flagsValue = `g` + flags.map((flag) => flag.value).join(``);
+
+    if (engines.includes(Engine.BROWSER_JS)) {
+      const data = localMatchAll(Engine.BROWSER_JS.value, text, pattern, flagsValue);
+      setMatches(data.matches);
+      setError(data.error);
+      setShowResults(true);
     }
 
-    setShowResults(true);
+    const engineValues = engines.filter((engine) => engine !== Engine.BROWSER_JS);
+    if (engineValues) {
+      matchProvider.matchAll(engineValues, text, pattern, flagsValue)
+        .then(([data]) => {
+          setMatches(data.matches);
+          setError(data.error);
+        })
+        .catch((e) => {
+          setError(e);
+        })
+        .finally(() => {
+          setShowResults(true);
+        });
+    }
   };
 
   return <>
@@ -99,7 +112,7 @@ const MatcherPage = () => {
                   name="engines"
                   value={engine.value}
                   checked={engines.includes(engine)}
-                  readOnly
+                  onChange={() => onEnginesChange(engine)}
                   disabled={engine.disabled}
                 />
                 {engine.title}
