@@ -17,7 +17,6 @@ const Engine = {
   PHP: {
     title: `PHP`,
     value: `php`,
-    disabled: true,
   },
 };
 
@@ -50,7 +49,7 @@ const createToggle = (Enumeration, toggledItem) => {
 };
 
 const MatcherPage = () => {
-  const [engines, setEngines] = React.useState([Engine.NODE_JS]);
+  const [engines, setEngines] = React.useState([Engine.PHP]);
   const [text, setText] = React.useState(``);
   const [pattern, setPattern] = React.useState(``);
   const [flags, setFlags] = React.useState([]);
@@ -72,24 +71,30 @@ const MatcherPage = () => {
     setError();
     setMatches([]);
 
-    const flagsValue = `g` + flags.map((flag) => flag.value).join(``);
+    const flagsValue = flags.map((flag) => flag.value).join(``);
+
+    /* eslint-disable */
 
     if (engines.includes(Engine.BROWSER_JS)) {
       const data = localMatchAll(Engine.BROWSER_JS.value, text, pattern, flagsValue);
+
       setMatches(data.matches);
       setError(data.error);
       setShowResults(true);
     }
 
-    const engineValues = engines.filter((engine) => engine !== Engine.BROWSER_JS);
-    if (engineValues) {
+    const engineValues = engines
+      .filter((engine) => engine !== Engine.BROWSER_JS)
+      .map((engine) => engine.value);
+
+    if (engineValues.length > 0) {
       matchProvider.matchAll(engineValues, text, pattern, flagsValue)
         .then(([data]) => {
           setMatches(data.matches);
           setError(data.error);
         })
-        .catch((e) => {
-          setError(e);
+        .catch((exception) => {
+          setError(exception);
         })
         .finally(() => {
           setShowResults(true);

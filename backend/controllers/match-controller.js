@@ -1,25 +1,26 @@
-const doMatchAll = (text, pattern, flagsValue) => {
-  try {
-    const regexp = new RegExp(pattern, flagsValue);
-    const it = text.matchAll(regexp);
-    return [Array.from(it)];
-  } catch (exception) {
-    return [undefined, {message: exception.message}];
-  }
-};
+const {findEngineByValue} = require(`../helpers/engine`)
 
 const matchAll = async (req, res) => {
-  const engineValue = req.query.engineValue;
+  const engineValues = req.query.engineValues;
   const text = req.query.text;
   const pattern = req.query.pattern;
   const flagsValue = req.query.flagsValue;
 
-  const [matches, error] = doMatchAll(text, pattern, flagsValue);
+  let results = [];
+  if (!Array.isArray(engineValues) || engineValues.length === 0) {
+    results.push({error: {message: `invalid engines`}})
+  } else {
+    results = await Promise.all(engineValues.map(async (engineValue) => {
+      const engine = findEngineByValue(engineValue);
+      if (!engine) {
+        return {error: {message: `invalid engine`}};
+      }
+      return engine.matchAll(engineValue, text, pattern, flagsValue);
+    }));
+  }
 
   res.set(`Access-Control-Allow-Origin`, `*`)
-  res.send([
-    {error, matches}
-  ]);
+  res.send(results);
 };
 
 module.exports = {
