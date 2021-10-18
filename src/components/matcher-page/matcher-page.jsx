@@ -4,6 +4,8 @@ import {LocalPath} from 'constants/local-path';
 import {localMatchAll} from 'helpers/match-helpers';
 import {matchProvider} from 'providers/match-provider';
 
+const REMOTE_ENGINES_GROUP = `remote`;
+
 /** @enum */
 const Engine = {
   BROWSER_JS: {
@@ -48,14 +50,33 @@ const createToggle = (Enumeration, toggledItem) => {
   };
 };
 
+const submitMatchAll = async (engineValues, text, pattern, flagsValue) => {
+  const localEngineValue = Engine.BROWSER_JS.value;
+  const remoteEngineValues = engineValues.filter((engineValue) => engineValue !== Engine.BROWSER_JS.value);
+
+  const results = [];
+  if (engineValues.includes(localEngineValue)) {
+    const result = localMatchAll(localEngineValue, text, pattern, flagsValue);
+    results.push(result);
+  }
+  if (remoteEngineValues.length > 0) {
+    try {
+      const remoteResults = await matchProvider.matchAll(remoteEngineValues, text, pattern, flagsValue);
+      results.push(...remoteResults);
+    } catch (exception) {
+      results.push({engineValue: REMOTE_ENGINES_GROUP, error: {message: exception.message}});
+    }
+  }
+  return results;
+};
+
 const MatcherPage = () => {
-  const [engines, setEngines] = React.useState([Engine.PHP]);
+  const [engines, setEngines] = React.useState([Engine.BROWSER_JS]);
   const [text, setText] = React.useState(``);
   const [pattern, setPattern] = React.useState(``);
   const [flags, setFlags] = React.useState([]);
-  const [shouldShowResults, setShowResults] = React.useState(false);
-  const [matches, setMatches] = React.useState([]);
-  const [error, setError] = React.useState();
+  const [results, setResults] = React.useState([]);
+  const [, setPending] = React.useState(false);
 
   const onEnginesChange = (toggledEngine) => {
     setEngines(createToggle(Engine, toggledEngine));
@@ -67,39 +88,20 @@ const MatcherPage = () => {
 
   const onSubmitClick = (evt) => {
     evt.preventDefault();
-    setShowResults(false);
-    setError();
-    setMatches([]);
 
+    const engineValues = engines.map((engine) => engine.value);
     const flagsValue = flags.map((flag) => flag.value).join(``);
 
-    /* eslint-disable */
+    setPending(true);
+    setResults([]);
 
-    if (engines.includes(Engine.BROWSER_JS)) {
-      const data = localMatchAll(Engine.BROWSER_JS.value, text, pattern, flagsValue);
-
-      setMatches(data.matches);
-      setError(data.error);
-      setShowResults(true);
-    }
-
-    const engineValues = engines
-      .filter((engine) => engine !== Engine.BROWSER_JS)
-      .map((engine) => engine.value);
-
-    if (engineValues.length > 0) {
-      matchProvider.matchAll(engineValues, text, pattern, flagsValue)
-        .then(([data]) => {
-          setMatches(data.matches);
-          setError(data.error);
-        })
-        .catch((exception) => {
-          setError(exception);
-        })
-        .finally(() => {
-          setShowResults(true);
-        });
-    }
+    submitMatchAll(engineValues, text, pattern, flagsValue)
+      .then((matchAllResults) => {
+        setResults(matchAllResults);
+      })
+      .finally(() => {
+        setPending(false);
+      });
   };
 
   return <>
@@ -168,29 +170,35 @@ const MatcherPage = () => {
 
         <button type="submit" onClick={onSubmitClick}>Match All</button>
 
-        {shouldShowResults && error && (
-          <div className="matcher-page__item">
-            <span className="matcher-page__item-title">Error</span>
-            <span>{error.message}</span>
-          </div>
-        )}
-
-        {shouldShowResults && !error && matches.length === 0 && (
-          <div className="matcher-page__item">
-            <span className="matcher-page__item-title">No matches found. Try to adjust your search...</span>
-          </div>
-        )}
-
-        {shouldShowResults && !error && matches.length > 0 && (
-          <div className="matcher-page__item">
-            <span className="matcher-page__item-title">Matches</span>
-            <ol>
-              {matches.map((match, matchIndex) => (
-                <li key={matchIndex}>&ldquo;{match[0]}&ldquo;</li>
-              ))}
-            </ol>
-          </div>
-        )}
+        {results.length > 0 && <>
+          <ul className="matcher-page__results">
+            {results.map(({engineValue, matches, error}) => {
+              let subtitle = ``;
+              if (error) {
+                subtitle = `Error`;
+              } else if (matches.length === 0) {
+                subtitle = `No matches found`;
+              } else {
+                subtitle = `Matches`;
+              }
+              return (
+                <div key={engineValue} className="matcher-page__item">
+                  <h2 className="matcher-page__item-title">{engineValue} - {subtitle}</h2>
+                  {error && <>
+                    <span>{error.message}</span>
+                  </>}
+                  {!error && matches.length > 0 && <>
+                    <ol>
+                      {matches.map((match, matchIndex) => (
+                        <li key={matchIndex}>&ldquo;{match[0]}&ldquo;</li>
+                      ))}
+                    </ol>
+                  </>}
+                </div>
+              );
+            })}
+          </ul>
+        </>}
       </form>
     </main>
   </>;

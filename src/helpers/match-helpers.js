@@ -1,9 +1,10 @@
-export const localMatchAll = (_, text, pattern, flagsValue) => {
+export const localMatchAll = (engineValue, text, patternValue, flagsValue) => {
   try {
-    const regexp = new RegExp(pattern, `${flagsValue}g`);
+    const regexp = new RegExp(patternValue, `${flagsValue}g`);
     const it = text.matchAll(regexp);
-    return {matches: Array.from(it).map((match) => match[0])};
-  } catch (e) {
-    return {error: e};
+    const matches = Array.from(it);
+    return {engineValue, matches};
+  } catch (exception) {
+    return {engineValue, error: {message: exception.message}};
   }
 };
