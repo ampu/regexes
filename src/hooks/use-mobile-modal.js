@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 
 import {Viewport} from '../constants/viewport';
-import {onNoop} from '../helpers/callback-helpers';
+import {onNoop} from '../../shared/helpers/callback-helpers';
 
 export const useMobileModal = () => {
   const [isActive, setActive] = useState(false);

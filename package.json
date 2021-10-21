@@ -31,10 +31,14 @@
     "not ie <= 11"
   ],
   "dependencies": {
+    "axios": "0.23.0",
+    "basic-auth": "2.0.1",
     "classnames": "2.3.1",
+    "cors": "2.8.5",
     "dayjs": "1.10.5",
     "focus-trap-react": "8.6.0",
     "lodash": "4.17.21",
+    "nanoid": "3.1.29",
     "normalize.css": "8.0.1",
     "prop-types": "15.7.2",
     "react": "17.0.2",
@@ -44,10 +48,8 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
     "react-yandex-maps": "4.6.0",
-    "basic-auth": "2.0.1",
     "winston": "3.3.3",
-    "winston-daily-rotate-file": "4.5.5",
-    "axios": "0.23.0"
+    "winston-daily-rotate-file": "4.5.5"
   },
   "devDependencies": {
     "@htmlacademy/editorconfig-cli": "1.0.0",

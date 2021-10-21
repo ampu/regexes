@@ -1,8 +1,7 @@
 {
+  "checkJs": true,
+  "experimentalDecorators": true,
   "compilerOptions": {
     "baseUrl": "src"
-  },
-  "include": [
-    "src"
-  ]
+  }
 }

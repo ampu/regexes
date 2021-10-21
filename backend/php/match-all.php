@@ -1,3 +1,5 @@
+#!php
+
 <?php
 
 function exitWithResponse($response) {
@@ -11,20 +13,27 @@ $patternValue = @$argv[3];
 $flagsValue = @$argv[4];
 
 if (!is_string($patternValue)) {
-    exitWithResponse(['engineValue' => $engineValue, 'error' => 'invalid pattern']);
+    exitWithResponse(['engineValue' => $engineValue, 'error' => ['message' => 'invalid pattern']]);
 }
 
 if (!is_string($text)) {
-    exitWithResponse(['engineValue' => $engineValue, 'error' => 'invalid text']);
+    exitWithResponse(['engineValue' => $engineValue, 'error' => ['message' => 'invalid text']]);
 }
 
 $pattern = strpos($patternValue, '/') === false ? "/$patternValue/$flagsValue" : $patternValue;
 
-$result = preg_match_all($pattern, $text, $matches);
+$result = preg_match_all($pattern, $text, $results, PREG_OFFSET_CAPTURE);
 
 if (!$result) {
   exitWithResponse(['engineValue' => $engineValue, 'matches' => []]);
 }
+
+$matches = array_map(function ($result) {
+  return [
+    'index' => $result[1],
+    'substring' => $result[0],
+  ];
+}, $results[0]);
 
 exitWithResponse(['engineValue' => $engineValue, 'matches' => $matches]);
 

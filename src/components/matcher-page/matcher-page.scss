@@ -9,6 +9,15 @@
   align-items: center;
 }
 
+.matcher-page__inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+  align-items: start;
+  justify-content: space-between;
+}
+
 .matcher-page h1 {
   margin: 0;
   margin-bottom: 20px;
@@ -40,10 +49,12 @@
 
     font-size: 14px;
   }
-}
 
-.matcher-page form {
-  width: 80%;
+  &:disabled {
+    background-color: #999999;
+    cursor: default;
+    filter: grayscale(100%);
+  }
 }
 
 .matcher-page__item {
@@ -65,8 +76,8 @@
 }
 
 .matcher-page__results {
-  display: grid;
-  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
 }
 
 .matcher-page input {

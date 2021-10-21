@@ -6,13 +6,16 @@ const express = require(`express`);
 const compression = require(`compression`);
 const bodyParser = require(`body-parser`);
 const auth = require(`basic-auth`);
+const cors = require(`cors`);
 
 const config = require(`./config`);
 const logger = require(`./modules/logger`);
 
-const {formatTimespan} = require(`./helpers/date`);
+const {formatTimespan} = require(`../shared/helpers/date-helpers`);
 
 const app = express();
+
+app.use(cors(config.http.cors))
 
 let reqCount = 0;
 app.use(function (req, res, next) {
@@ -47,7 +50,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 const matchController = require(`./controllers/match-controller`);
-app.get(`/match-all`, matchController.matchAll);
+app.post(`/match-all`, matchController.matchAll);
 
 const server = require(`http`)
   .createServer(app)

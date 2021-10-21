@@ -1,10 +1,14 @@
-const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../helpers/engine`)
+const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../helpers/engine-helpers`)
+const {sleep} = require(`../../shared/helpers/callback-helpers`);
 
 const matchAll = async (req, res) => {
-  const engineValues = req.query.engineValues;
-  const text = req.query.text;
-  const pattern = req.query.pattern;
-  const flagsValue = req.query.flagsValue;
+  console.log(`matchAll`, req.body);
+
+  const requestId = req.query.requestId;
+  const engineValues = req.body.engineValues;
+  const text = req.body.text;
+  const pattern = req.body.pattern;
+  const flagsValue = req.body.flagsValue;
 
   let results = [];
   if (!Array.isArray(engineValues) || engineValues.length === 0) {
@@ -19,10 +23,16 @@ const matchAll = async (req, res) => {
     }));
   }
 
+  await sleep(1000);
+
   res.set(`Access-Control-Allow-Origin`, `*`)
-  res.send(results);
+  res.send({
+    requestId,
+    results,
+  });
 };
 
 module.exports = {
   matchAll,
+  sleep,
 };

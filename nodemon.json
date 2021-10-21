@@ -1,0 +1,11 @@
+{
+  "verbose": true,
+  "execMap": {
+    "js": "node --unhandled-rejections=strict"
+  },
+  "watch": [
+    "backend",
+    "shared"
+  ],
+  "ignore": ["*.test.js"]
+}

@@ -10,7 +10,11 @@ const Engine = {
       try {
         const regexp = new RegExp(patternValue, `${flagsValue}g`);
         const it = text.matchAll(regexp);
-        const matches = Array.from(it);
+        const results = Array.from(it);
+        const matches = results.map((result) => ({
+          index: result.index,
+          substring: result[0],
+        }));
         return {engineValue, matches};
       } catch (exception) {
         return {engineValue, error: {message: exception.message}};
@@ -21,6 +25,18 @@ const Engine = {
     value: `php`,
     matchAll(engineValue, text, patternValue, flagsValue) {
       return foreignMatchAll(`php`, `${__dirname}/../php/match-all.php`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  PYTHON: {
+    value: `python`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`python3`, `${__dirname}/../python/match-all.py`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  RUBY: {
+    value: `ruby`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`ruby`, `${__dirname}/../ruby/match-all.rb`, engineValue, text, patternValue, flagsValue);
     },
   },
 };
@@ -41,21 +57,27 @@ const foreignMatchAll = async (command, script, engineValue, text, patternValue,
       ]);
 
       let stdout = ``;
+      let stderr = ``;
 
       process.stdout.on('data', (data) => {
         stdout += data;
       });
 
+      process.stderr.on('data', (data) => {
+        stderr += data;
+      });
+
       process.on('close', (code) => {
         try {
           console.log(`stdout`, stdout);
+          console.log(`stderr`, stderr);
           resolve(JSON.parse(stdout));
         } catch (exception) {
-          resolve({error: {message: exception.message}});
+          resolve({engineValue, error: {message: exception.message}});
         }
       });
     } catch (exception) {
-      resolve({error: {message: exception.message}});
+      resolve({engineValue, error: {message: exception.message}});
     }
   });
 };

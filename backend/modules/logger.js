@@ -1,7 +1,7 @@
 const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
 
-const {formatTimestamp, formatTimespan} = require('../helpers/date');
+const {formatTimestamp, formatTimespan} = require('../../shared/helpers/date-helpers');
 
 const startDate = new Date();
 

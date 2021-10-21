@@ -9,16 +9,26 @@ class MatchProvider {
     });
   }
 
+  buildURL(endpoint) {
+    return `${process.env.REACT_APP_API_BASE_URL}/${endpoint}`;
+  }
+
   /**
+   * @param {string} requestId
    * @param {string[]} engineValues
    * @param {string} text
    * @param {string} pattern
    * @param {string} flagsValue
    * @return {Promise<{matches: string[], error: {message: string}}>}
    */
-  async matchAll(engineValues, text, pattern, flagsValue) {
-    const {data} = await this._client.get(`http://localhost:3001/match-all`, {
+  async matchAll(requestId, engineValues, text, pattern, flagsValue) {
+    const {data} = await this._client.request({
+      method: `post`,
+      url: this.buildURL(`match-all`),
       params: {
+        requestId,
+      },
+      data: {
         engineValues,
         text,
         pattern,
