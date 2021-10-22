@@ -1,4 +1,4 @@
-const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../helpers/engine-helpers`)
+const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../engines/engine-helpers`)
 const {sleep} = require(`../../shared/helpers/callback-helpers`);
 
 const matchAll = async (req, res) => {
@@ -22,8 +22,6 @@ const matchAll = async (req, res) => {
       return engine.matchAll(engineValue, text, pattern, flagsValue);
     }));
   }
-
-  await sleep(1000);
 
   res.set(`Access-Control-Allow-Origin`, `*`)
   res.send({

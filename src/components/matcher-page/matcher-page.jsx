@@ -10,6 +10,22 @@ const REMOTE_ENGINES_KEY = `remote`;
 const EMPTY_RESULTS = [];
 
 /** @enum */
+const Flag = {
+  IGNORE_CASE: {
+    title: `Ignore Case`,
+    value: `i`,
+  },
+  SINGLE_LINE: {
+    title: `Single Line`,
+    value: `s`,
+  },
+  MULTILINE: {
+    title: `Multiline`,
+    value: `m`,
+  },
+};
+
+/** @enum */
 const Engine = {
   BROWSER_JS: {
     title: `JavaScript (browser)`,
@@ -31,22 +47,18 @@ const Engine = {
     title: `Ruby`,
     value: `ruby`,
   },
+  DOTNET: {
+    title: `.NET (C#)`,
+    value: `dotnet`,
+  },
+  JVM: {
+    title: `JVM (Kotlin)`,
+    value: `jvm`,
+  },
 };
 
-/** @enum */
-const Flag = {
-  IGNORE_CASE: {
-    title: `Ignore Case`,
-    value: `i`,
-  },
-  SINGLE_LINE: {
-    title: `Single Line`,
-    value: `s`,
-  },
-  MULTILINE: {
-    title: `Multiline`,
-    value: `m`,
-  },
+const findEngineByValue = (engineValue) => {
+  return Object.values(Engine).find((engine) => engine.value === engineValue);
 };
 
 const createToggle = (Enumeration, toggledItem) => {
@@ -222,9 +234,12 @@ const MatcherPage = () => {
             } else {
               subtitle = `Matches`;
             }
+
+            const engine = findEngineByValue(engineValue);
+
             return (
               <li key={engineValue} className="matcher-page__item">
-                <h2 className="matcher-page__item-title">{engineValue} - {subtitle}</h2>
+                <h2 className="matcher-page__item-title">{engine ? engine.title : engineValue} - {subtitle}</h2>
                 {error && <>
                   <span>{error.message}</span>
                 </>}

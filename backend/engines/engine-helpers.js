@@ -24,19 +24,31 @@ const Engine = {
   PHP: {
     value: `php`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(`php`, `${__dirname}/../php/match-all.php`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(`php`, `${__dirname}/php/match-all.php`, engineValue, text, patternValue, flagsValue);
     },
   },
   PYTHON: {
     value: `python`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(`python3`, `${__dirname}/../python/match-all.py`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(`python3`, `${__dirname}/python/match-all.py`, engineValue, text, patternValue, flagsValue);
     },
   },
   RUBY: {
     value: `ruby`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(`ruby`, `${__dirname}/../ruby/match-all.rb`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(`ruby`, `${__dirname}/ruby/match-all.rb`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  DOTNET: {
+    value: `dotnet`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`sh`, `${__dirname}/dotnet/match-all.sh`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  JVM: {
+    value: `jvm`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`sh`, `${__dirname}/jvm/match-all.sh`, engineValue, text, patternValue, flagsValue);
     },
   },
 };
