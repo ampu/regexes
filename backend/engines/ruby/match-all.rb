@@ -5,7 +5,7 @@ require 'json'
 engineValue = ARGV[0].nil? ? '' : ARGV[0]
 text = ARGV[1]
 patternValue = ARGV[2]
-flagsValue = ARGV[3]
+flagsValue = ARGV[3].nil? ? '' : ARGV[3]
 
 def exitWithResponse(response)
     puts JSON.pretty_generate(response)
@@ -20,14 +20,14 @@ if text.nil?
     exitWithResponse({engineValue: engineValue, error: {message: 'invalid text'}})
 end
 
-patternValue =~ /^\/(.*)\/(.*)$/m
-pattern = '(' + ($1.nil? ? patternValue : $1) + ')'
-flags = $2.nil? ? '' : $2
+# patternValue =~ /^\/(.*)\/(.*)$/m
+# pattern = '(' + ($1.nil? ? patternValue : $1) + ')'
+# flags = $2.nil? ? '' : $2
 
 begin
-    regexpObject = flags == '' ? Regexp.new(pattern) : Regexp.new('(?' + flags + ')' + pattern)
+    regexpObject = flagsValue == '' ? Regexp.new(patternValue) : Regexp.new('(?' + flagsValue + ')' + patternValue)
 rescue
-    exitWithResponse({engineValue: engineValue, error: {message: 'invalid regexp'}})
+    exitWithResponse({engineValue: engineValue, error: {message: 'invalid pattern'}})
 end
 
 matches = text.enum_for(:scan, regexpObject).map {

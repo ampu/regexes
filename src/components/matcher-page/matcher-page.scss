@@ -75,12 +75,35 @@
   font-weight: bold;
 }
 
+.matcher-page__engines-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
 .matcher-page__results {
   margin: 0;
   margin-bottom: -20px;
   padding: 0;
 
   font-size: 14px;
+}
+
+.matcher-page__result-performance {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.matcher-page__text-with-matches {
+  white-space: pre;
+  font-size: 14px;
+
+  span {
+    opacity: 0.5;
+  }
+
+  b {
+    text-decoration: underline;
+  }
 }
 
 .matcher-page input {

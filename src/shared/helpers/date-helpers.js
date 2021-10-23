@@ -31,8 +31,17 @@ function formatTimespan(totalMilliseconds) {
     + `.` + milliseconds.toString().padStart(3, 0);
 }
 
+function formatTotalSeconds(totalMilliseconds) {
+  const milliseconds = Math.floor(totalMilliseconds % 1000);
+  const totalSeconds = Math.floor(totalMilliseconds / 1000);
+
+  return totalSeconds.toString()
+    + `.` + milliseconds.toString().padStart(3, 0);
+}
+
 module.exports = {
   formatDate,
   formatTimestamp,
   formatTimespan,
+  formatTotalSeconds,
 };

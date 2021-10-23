@@ -20,7 +20,8 @@ if (!is_string($text)) {
     exitWithResponse(['engineValue' => $engineValue, 'error' => ['message' => 'invalid text']]);
 }
 
-$pattern = strpos($patternValue, '/') === false ? "/$patternValue/$flagsValue" : $patternValue;
+// $pattern = strpos($patternValue, '/') === false ? "/$patternValue/$flagsValue" : $patternValue;
+$pattern = "/$patternValue/$flagsValue";
 
 $result = preg_match_all($pattern, $text, $results, PREG_OFFSET_CAPTURE);
 

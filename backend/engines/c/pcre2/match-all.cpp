@@ -63,35 +63,39 @@ int main(int argc, char** argv) {
         exit_with_error(engineValue, ERROR_RUNTIME);
     }
 
-    std::string pattern;
-    pcre2_match_data* patternFlagsMatchData = pcre2_match_data_create_from_pattern(patternFlagsRe, NULL);
-    int patternFlagsGroupCount = pcre2_match(patternFlagsRe, PCRE2_SPTR(patternValue), strlen(patternValue), 0, 0, patternFlagsMatchData, NULL);
-    if (patternFlagsGroupCount == PCRE2_ERROR_NOMATCH) {
-        if (flagsValue == NULL || flagsValue[0] == 0) {
-            pattern = patternValue;
-        }
-        else {
-            pattern = std::string("(?") + flagsValue + ")" + patternValue;
-        }
-    }
-    else {
-        if (patternFlagsGroupCount <= 0) {
-            exit_with_error(engineValue, ERROR_RUNTIME);
-        }
-        else {
-            PCRE2_SIZE* patternFlagsOvector = pcre2_get_ovector_pointer(patternFlagsMatchData);
+    std::string pattern = flagsValue == NULL || flagsValue[0] == 0
+        ? patternValue
+        : std::string("(?") + flagsValue + ")" + patternValue;
 
-            std::string localPattern = std::string(pattern.c_str() + patternFlagsOvector[2 * 1], pattern.c_str() + patternFlagsOvector[2 * 1 + 1]);
-            std::string localFlags = std::string(pattern.c_str() + patternFlagsOvector[2 * 2], pattern.c_str() + patternFlagsOvector[2 * 2 + 1]);
-
-            if (localFlags.empty()) {
-                pattern = localPattern;
-            }
-            else {
-                pattern = std::string("(?") + localFlags + ")" + localPattern;
-            }
-        }
-    }
+//    std::string pattern;
+//    pcre2_match_data* patternFlagsMatchData = pcre2_match_data_create_from_pattern(patternFlagsRe, NULL);
+//    int patternFlagsGroupCount = pcre2_match(patternFlagsRe, PCRE2_SPTR(patternValue), strlen(patternValue), 0, 0, patternFlagsMatchData, NULL);
+//    if (patternFlagsGroupCount == PCRE2_ERROR_NOMATCH) {
+//        if (flagsValue == NULL || flagsValue[0] == 0) {
+//            pattern = patternValue;
+//        }
+//        else {
+//            pattern = std::string("(?") + flagsValue + ")" + patternValue;
+//        }
+//    }
+//    else {
+//        if (patternFlagsGroupCount <= 0) {
+//            exit_with_error(engineValue, ERROR_RUNTIME);
+//        }
+//        else {
+//            PCRE2_SIZE* patternFlagsOvector = pcre2_get_ovector_pointer(patternFlagsMatchData);
+//
+//            std::string localPattern = std::string(pattern.c_str() + patternFlagsOvector[2 * 1], pattern.c_str() + patternFlagsOvector[2 * 1 + 1]);
+//            std::string localFlags = std::string(pattern.c_str() + patternFlagsOvector[2 * 2], pattern.c_str() + patternFlagsOvector[2 * 2 + 1]);
+//
+//            if (localFlags.empty()) {
+//                pattern = localPattern;
+//            }
+//            else {
+//                pattern = std::string("(?") + localFlags + ")" + localPattern;
+//            }
+//        }
+//    }
 
     errorCode = 0;
     errorOffset = 0;

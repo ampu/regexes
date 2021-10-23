@@ -15,8 +15,13 @@ class Program
       public string? Substring { get; set; }
     }
 
-    private static void exitWithError(string engineValue, string error)
+    private static void exitWithError(string engineValue, string errorMessage)
     {
+        var error = new Dictionary<string, string>
+        {
+            {"message", errorMessage},
+        };
+
         Console.WriteLine(JsonSerializer.Serialize(
             new Dictionary<string, object>
             {
@@ -54,10 +59,10 @@ class Program
 
     static void Main(string[] args)
     {
-        var engineValue = args.Length > 0 ? args[0] : "";
+        var engineValue = args.Length > 0 ? args[0] : String.Empty;
         var text = args.Length > 1 ? args[1] : null;
         var patternValue = args.Length > 2 ? args[2] : null;
-        var flagsValue = args.Length > 3 ? args[3] : null;
+        var flagsValue = args.Length > 3 ? args[3] : String.Empty;
 
         if (patternValue == null) {
             exitWithError(engineValue, "invalid pattern");
@@ -67,13 +72,18 @@ class Program
             exitWithError(engineValue, "invalid input");
         }
 
-        var patternFlagsMatch = Regex.Match(patternValue!, "^/(.*)/(.*)$", RegexOptions.Singleline);
-        var pattern = patternFlagsMatch == Match.Empty ? patternValue! : patternFlagsMatch.Groups[1].Value;
-        var flags = patternFlagsMatch == Match.Empty ? null : patternFlagsMatch.Groups[2].Value;
+//        var patternFlagsMatch = Regex.Match(patternValue!, "^/(.*)/(.*)$", RegexOptions.Singleline);
+//        var pattern = patternFlagsMatch == Match.Empty ? patternValue! : patternFlagsMatch.Groups[1].Value;
+//        var flags = patternFlagsMatch == Match.Empty ? null : patternFlagsMatch.Groups[2].Value;
+//        pattern = flags == null ? pattern : ("(?" + flags + ")" + pattern);
 
-        pattern = flags == null ? pattern : ("(?" + flags + ")" + pattern);
-
-        var matches = Regex.Matches(text!, pattern);
-        exitWithMatch(engineValue, matches);
+        var pattern = flagsValue == String.Empty ? patternValue! : ("(?" + flagsValue + ")" + patternValue);
+        try {
+          var matches = Regex.Matches(text!, pattern);
+          exitWithMatch(engineValue, matches);
+        }
+        catch (Exception) {
+          exitWithError(engineValue, "invalid pattern");
+        }
     }
 }

@@ -20,11 +20,11 @@ def main():
     if not isinstance(text, str):
         exitWithResponse({'engineValue': engineValue, 'error': {'message': 'invalid text'}})
 
-    patternFlagsMatch = re.search(r'^\/(.*)\/(.*)$', patternValue, re.DOTALL)
-    pattern = patternFlagsMatch.group(1) if patternFlagsMatch else patternValue
-    flags = patternFlagsMatch.group(2) if patternFlagsMatch else ''
+#     patternFlagsMatch = re.search(r'^\/(.*)\/(.*)$', patternValue, re.DOTALL)
+#     pattern = patternFlagsMatch.group(1) if patternFlagsMatch else patternValue
+#     flags = patternFlagsMatch.group(2) if patternFlagsMatch else ''
 
-    patternWithFlags = ('(?' + flags + ')' if flags else '') + pattern
+    patternWithFlags = ('(?' + flagsValue + ')' if flagsValue else '') + patternValue
     try:
       matches = [{'index': match.start(0), 'substring': match[0]} for match in re.finditer(patternWithFlags, text)]
       exitWithResponse({'engineValue': engineValue, 'matches': matches})

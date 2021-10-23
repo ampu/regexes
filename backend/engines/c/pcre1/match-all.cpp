@@ -66,32 +66,35 @@ int main(int argc, char** argv) {
         exit_with_error(engineValue, ERROR_RUNTIME);
     }
 
-    std::string pattern;
-    groupCount = pcre_exec(patternFlagsRe, NULL, patternValue, strlen(patternValue), 0, 0, ovector, OVECTOR_LENGTH);
-    if (groupCount == PCRE_ERROR_NOMATCH) {
-        if (flagsValue == NULL || flagsValue[0] == 0) {
-            pattern = patternValue;
-        }
-        else {
-            pattern = std::string("(?") + flagsValue + ")" + patternValue;
-        }
-    }
-    else {
-        if (groupCount <= 0) {
-            exit_with_error(engineValue, ERROR_RUNTIME);
-        }
-        else {
-            std::string localPattern = std::string(pattern.c_str() + ovector[2 * 1], pattern.c_str() + ovector[2 * 1 + 1]);
-            std::string localFlags = std::string(pattern.c_str() + ovector[2 * 2], pattern.c_str() + ovector[2 * 2 + 1]);
+    std::string pattern = flagsValue == NULL || flagsValue[0] == 0
+        ? patternValue
+        : std::string("(?") + flagsValue + ")" + patternValue;
 
-            if (localFlags.empty()) {
-                pattern = localPattern;
-            }
-            else {
-                pattern = std::string("(?") + localFlags + ")" + localPattern;
-            }
-        }
-    }
+//    groupCount = pcre_exec(patternFlagsRe, NULL, patternValue, strlen(patternValue), 0, 0, ovector, OVECTOR_LENGTH);
+//    if (groupCount == PCRE_ERROR_NOMATCH) {
+//        if (flagsValue == NULL || flagsValue[0] == 0) {
+//            pattern = patternValue;
+//        }
+//        else {
+//            pattern = std::string("(?") + flagsValue + ")" + patternValue;
+//        }
+//    }
+//    else {
+//        if (groupCount <= 0) {
+//            exit_with_error(engineValue, ERROR_RUNTIME);
+//        }
+//        else {
+//            std::string localPattern = std::string(pattern.c_str() + ovector[2 * 1], pattern.c_str() + ovector[2 * 1 + 1]);
+//            std::string localFlags = std::string(pattern.c_str() + ovector[2 * 2], pattern.c_str() + ovector[2 * 2 + 1]);
+//
+//            if (localFlags.empty()) {
+//                pattern = localPattern;
+//            }
+//            else {
+//                pattern = std::string("(?") + localFlags + ")" + localPattern;
+//            }
+//        }
+//    }
 
     error = NULL;
     errorOffset = 0;

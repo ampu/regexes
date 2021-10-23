@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
     val engineValue = if (args.size > 0) args[0] else ""
     val text = if (args.size > 1) args[1] else null
     val patternValue = if (args.size > 2) args[2] else null
-    val flagsValue = if (args.size > 3) args[3] else null
+    val flagsValue = if (args.size > 3) args[3] else ""
 
     if (patternValue === null) {
         Error(engineValue, "invalid regexp").exit();
@@ -40,12 +40,18 @@ fun main(args: Array<String>) {
         Error(engineValue, "invalid input").exit();
     }
 
-    val (_, pattern, flags) = Regex("^/(.*)/(.*)$", RegexOption.DOT_MATCHES_ALL).find(patternValue!!)?.groupValues
-        ?: arrayListOf(null , patternValue, null)
+    // val (_, pattern, flags) = Regex("^/(.*)/(.*)$", RegexOption.DOT_MATCHES_ALL).find(patternValue!!)?.groupValues
+    //    ?: arrayListOf(null , patternValue, null)
 
-    val regexpObject = if (flags === null) pattern!!.toRegex() else ("(?" + flags + ")" + pattern).toRegex();
+    var regexpObject: Regex? = null
+    try {
+        regexpObject = if (flagsValue === "") patternValue!!.toRegex() else ("(?" + flagsValue + ")" + patternValue).toRegex();
+    }
+    catch (e: Exception) {
+        Error(engineValue, "invalid regexp").exit();
+    }
 
-    val results = regexpObject.findAll(text!!);
+    val results = regexpObject!!.findAll(text!!);
     val matches = results.map { Match(it.range.start, it.value) }.toList()
 
     Matches(engineValue, matches).exit();

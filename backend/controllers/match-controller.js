@@ -1,4 +1,4 @@
-const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../engines/engine-helpers`)
+const {REMOTE_ENGINES_GROUP, findEngineByValue} = require(`../engines/engines`)
 const {sleep} = require(`../../shared/helpers/callback-helpers`);
 
 const matchAll = async (req, res) => {
@@ -19,7 +19,14 @@ const matchAll = async (req, res) => {
       if (!engine) {
         return {engineValue, error: {message: `invalid engine`}};
       }
-      return engine.matchAll(engineValue, text, pattern, flagsValue);
+      const startDate = new Date();
+      return engine.matchAll(engineValue, text, pattern, flagsValue)
+        .then((engineResult) => {
+          return {
+            performance: new Date() - startDate,
+            ...engineResult,
+          };
+        });
     }));
   }
 

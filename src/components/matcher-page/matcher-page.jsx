@@ -1,9 +1,12 @@
 import React from 'react';
 
 import {LocalPath} from 'constants/local-path';
+import {Engine, ENGINES, findEngineByValue} from 'constants/engine';
 import {localMatchAll} from 'helpers/match-helpers';
 import {generateId} from 'shared/helpers/id-helpers';
+import {formatTotalSeconds} from 'shared/helpers/date-helpers';
 import {matchProvider} from 'providers/match-provider';
+import {enginesStore} from 'providers/engines-store';
 
 const ALL_ENGINES_KEY = `all`;
 const REMOTE_ENGINES_KEY = `remote`;
@@ -27,50 +30,6 @@ const Flag = {
     title: `Unicode`,
     value: `u`,
   },
-};
-
-/** @enum */
-const Engine = {
-  BROWSER_JS: {
-    title: `JavaScript (browser)`,
-    value: `browser-js`,
-  },
-  NODE_JS: {
-    title: `JavaScript (node.js)`,
-    value: `node-js`,
-  },
-  PHP: {
-    title: `PHP`,
-    value: `php`,
-  },
-  PYTHON: {
-    title: `Python`,
-    value: `python`,
-  },
-  RUBY: {
-    title: `Ruby`,
-    value: `ruby`,
-  },
-  DOTNET: {
-    title: `.NET (C#)`,
-    value: `dotnet`,
-  },
-  JVM: {
-    title: `JVM (Kotlin)`,
-    value: `jvm`,
-  },
-  PCRE1: {
-    title: `PCRE1 (C++)`,
-    value: `pcre1`,
-  },
-  PCRE2: {
-    title: `PCRE2 (C++)`,
-    value: `pcre2`,
-  },
-};
-
-const findEngineByValue = (engineValue) => {
-  return Object.values(Engine).find((engine) => engine.value === engineValue);
 };
 
 const createToggle = (Enumeration, toggledItem) => {
@@ -105,8 +64,22 @@ const submitMatchAll = async (requestId, engineValues, text, pattern, flagsValue
   return results;
 };
 
+const getSubstrings = (text, matches) => {
+  if (matches.length === 0) {
+    return [text];
+  }
+  let afterMatchIndex = 0;
+  const substrings = [];
+  for (const match of matches) {
+    substrings.push(text.substring(afterMatchIndex, match.index), match.substring);
+    afterMatchIndex = match.index + match.substring.length;
+  }
+  substrings.push(text.substring(afterMatchIndex));
+  return substrings;
+};
+
 const MatcherPage = () => {
-  const [engines, setEngines] = React.useState(Object.values(Engine));
+  const [engines, setEngines] = React.useState(ENGINES);
   const [text, setText] = React.useState(``);
   const [pattern, setPattern] = React.useState(``);
   const [flags, setFlags] = React.useState([]);
@@ -147,6 +120,14 @@ const MatcherPage = () => {
   };
 
   React.useEffect(() => {
+    setEngines(enginesStore.getEngines());
+  }, []);
+
+  React.useEffect(() => {
+    enginesStore.setEngines(engines);
+  }, [engines]);
+
+  React.useEffect(() => {
     setResults(EMPTY_RESULTS);
   }, [text, pattern, flags]);
 
@@ -158,21 +139,23 @@ const MatcherPage = () => {
         <form method="post" action={LocalPath.MATCH_ALL}>
           <fieldset className="matcher-page__item">
             <legend className="matcher-page__item-title">Engines</legend>
-            {Object.values(Engine).map((engine) => {
-              return (
-                <label key={engine.value} className="matcher-page__checkbox-label">
-                  <input
-                    type="checkbox"
-                    name="engines"
-                    value={engine.value}
-                    checked={engines.includes(engine)}
-                    onChange={() => onEnginesChange(engine)}
-                    disabled={engine.disabled}
-                  />
-                  {engine.title}
-                </label>
-              );
-            })}
+            <div className="matcher-page__engines-inner">
+              {Object.values(Engine).map((engine) => {
+                return (
+                  <label key={engine.value} className="matcher-page__checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="engines"
+                      value={engine.value}
+                      checked={engines.includes(engine)}
+                      onChange={() => onEnginesChange(engine)}
+                      disabled={engine.disabled}
+                    />
+                    {engine.title}
+                  </label>
+                );
+              })}
+            </div>
           </fieldset>
 
           <div className="matcher-page__item">
@@ -227,7 +210,6 @@ const MatcherPage = () => {
         <ul className="matcher-page__results">
           {engines.length === 0 && (
             <li key={ALL_ENGINES_KEY} className="matcher-page__item">
-              <h2 className="matcher-page__item-title">Error</h2>
               <span>No engines checked. Please select one...</span>
             </li>
           )}
@@ -237,7 +219,7 @@ const MatcherPage = () => {
               {requestId && <span>Evaluating...</span>}
             </li>
           )}
-          {results.length > 0 && results.map(({engineValue, matches, error}) => {
+          {results.length > 0 && results.map(({engineValue, performance, matches, error}) => {
             let subtitle = ``;
             if (error) {
               subtitle = `Error`;
@@ -251,7 +233,11 @@ const MatcherPage = () => {
 
             return (
               <li key={engineValue} className="matcher-page__item">
-                <h2 className="matcher-page__item-title">{engine ? engine.title : engineValue} - {subtitle}</h2>
+                <h2 className="matcher-page__item-title">
+                  {engine ? engine.title : engineValue} - {subtitle}
+                  {Number.isFinite(performance) &&
+                  <span className="matcher-page__result-performance"> (in {formatTotalSeconds(performance)}s)</span>}
+                </h2>
                 {error && <>
                   <span>{error.message}</span>
                 </>}
@@ -262,6 +248,15 @@ const MatcherPage = () => {
                     ))}
                   </ol>
                 </>}
+                {!error && (
+                  <p className="matcher-page__text-with-matches">
+                    {getSubstrings(text, matches).map((substring, substringIndex) => {
+                      return substringIndex % 2 === 1
+                        ? <b key={substringIndex}>{substring}</b>
+                        : <span key={substringIndex}>{substring}</span>;
+                    })}
+                  </p>
+                )}
               </li>
             );
           })}

@@ -6,7 +6,7 @@ const REMOTE_ENGINES_GROUP = `remote`;
 const Engine = {
   NODE_JS: {
     value: `node-js`,
-    matchAll(engineValue, text, patternValue, flagsValue) {
+    async matchAll(engineValue, text, patternValue, flagsValue) {
       try {
         const regexp = new RegExp(patternValue, `${flagsValue}g`);
         const it = text.matchAll(regexp);
