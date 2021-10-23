@@ -51,6 +51,18 @@ const Engine = {
       return foreignMatchAll(`sh`, `${__dirname}/jvm/match-all.sh`, engineValue, text, patternValue, flagsValue);
     },
   },
+  PCRE1: {
+    value: `pcre1`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(``, `${__dirname}/c/pcre1/bin/match-all`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  PCRE2: {
+    value: `pcre2`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(``, `${__dirname}/c/pcre2/bin/match-all`, engineValue, text, patternValue, flagsValue);
+    },
+  },
 };
 
 const findEngineByValue = (engineValue) => {
@@ -60,13 +72,13 @@ const findEngineByValue = (engineValue) => {
 const foreignMatchAll = async (command, script, engineValue, text, patternValue, flagsValue) => {
   return new Promise((resolve) => {
     try {
-      const process = spawn(command, [
+      const process = spawn(command || script, [
         script,
         engineValue,
         text,
         patternValue,
         flagsValue,
-      ]);
+      ].slice(command ? 0 : 1));
 
       let stdout = ``;
       let stderr = ``;

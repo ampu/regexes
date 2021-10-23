@@ -23,6 +23,10 @@ const Flag = {
     title: `Multiline`,
     value: `m`,
   },
+  UNICODE: {
+    title: `Unicode`,
+    value: `u`,
+  },
 };
 
 /** @enum */
@@ -54,6 +58,14 @@ const Engine = {
   JVM: {
     title: `JVM (Kotlin)`,
     value: `jvm`,
+  },
+  PCRE1: {
+    title: `PCRE1 (C++)`,
+    value: `pcre1`,
+  },
+  PCRE2: {
+    title: `PCRE2 (C++)`,
+    value: `pcre2`,
   },
 };
 
@@ -136,7 +148,7 @@ const MatcherPage = () => {
 
   React.useEffect(() => {
     setResults(EMPTY_RESULTS);
-  }, [engines, text, pattern, flags]);
+  }, [text, pattern, flags]);
 
   return <>
     <main className="matcher-page">
