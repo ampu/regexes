@@ -1,5 +1,7 @@
 const {spawn} = require(`child_process`);
 
+const logger = require(`../modules/logger`);
+
 const REMOTE_ENGINES_GROUP = `remote`;
 
 /** @enum */
@@ -80,14 +82,18 @@ const foreignMatchAll = async (command, script, engineValue, text, patternValue,
         flagsValue,
       ].slice(command ? 0 : 1));
 
+      process.on(`error`, (error) => {
+        logger.error(error);
+      });
+
       let stdout = ``;
       let stderr = ``;
 
-      process.stdout.on('data', (data) => {
+      process.stdout.on(`data`, (data) => {
         stdout += data;
       });
 
-      process.stderr.on('data', (data) => {
+      process.stderr.on(`data`, (data) => {
         stderr += data;
       });
 
