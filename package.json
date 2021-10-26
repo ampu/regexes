@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "mon": "nodemon backend/server.js",
     "build": "react-scripts build",
-    "build:gh-pages": "PUBLIC_URL=/regexes react-scripts build",
+    "build:gh-pages": "REACT_APP_API_BASE_URL=http://188.225.47.232:3001 PUBLIC_URL=/regexes react-scripts build",
     "test": "npm run editorconfig && npm run stylelint && npm run eslint",
     "editorconfig": "editorconfig-cli",
     "stylelint": "stylelint 'src/**/*.scss' --syntax scss",
