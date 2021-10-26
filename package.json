@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "node backend/server.js",
     "mon": "nodemon backend/server.js",
     "build": "react-scripts build",
     "build:gh-pages": "REACT_APP_API_BASE_URL=http://188.225.47.232:3001 PUBLIC_URL=/regexes react-scripts build",

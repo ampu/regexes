@@ -1,3 +1,5 @@
 #!/bin/sh
 
-dotnet publish -c Release -r osx.10.15-x64
+cd "$(dirname "$0")" \
+  && . ../../../.env.local || . ../../../.env \
+  && dotnet publish -c Release -r "$DOTNET_RUNTIME"

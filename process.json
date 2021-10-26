@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "server",
+      "script": "backend/server.js",
+      "watch": false,
+      "env": {
+        "NODE_ENV": "production",
+        "LOGKEY": "server"
+      },
+      "out_file": "/dev/null",
+      "error_file": "/dev/null"
+    }
+  ]
+}
