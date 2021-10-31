@@ -1,8 +1,10 @@
 #!/bin/sh
 
-./install__dotnet.sh \
-  && ./install__jvm.sh \
-  && ./install__go.sh \
-  && ./install__rust.sh \
-  && ./install__pcre.sh \
-  && ./install__pcre2.sh
+cd "$(dirname "$0")" \
+  && echo '' >>../.env.local \
+  && ./install-dotnet.sh \
+  && ./install-jvm.sh \
+  && ./install-go.sh \
+  && ./install-rust.sh \
+  && ./install-pcre.sh \
+  && ./install-pcre2.sh

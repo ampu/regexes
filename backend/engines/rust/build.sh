@@ -1,3 +1,5 @@
 #!/bin/sh
 
-cargo build --release && ./target/release/match-all
+cd "$(dirname "$0")" \
+  && apt install -y cargo \
+  && cargo build --release && ./target/release/match-all
