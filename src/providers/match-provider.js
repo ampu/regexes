@@ -19,7 +19,7 @@ class MatchProvider {
    * @param {string} text
    * @param {string} pattern
    * @param {string} flagsValue
-   * @return {Promise<{matches: string[], error: {message: string}}>}
+   * @return {Promise<{matches: {index: number, substring: string}[], error: {message: string}[]}>}
    */
   async matchAll(requestId, engineValues, text, pattern, flagsValue) {
     const {data} = await this._client.request({
@@ -35,7 +35,7 @@ class MatchProvider {
         flagsValue,
       },
     });
-    return data;
+    return data.results;
   }
 }
 

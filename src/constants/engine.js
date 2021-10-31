@@ -28,6 +28,14 @@ const Engine = {
     title: `JVM (Kotlin)`,
     value: `jvm`,
   },
+  GO: {
+    title: `Go`,
+    value: `go`,
+  },
+  RUST: {
+    title: `Rust`,
+    value: `rust`,
+  },
   PCRE1: {
     title: `PCRE1 (C++)`,
     value: `pcre1`,

@@ -53,6 +53,18 @@ const Engine = {
       return foreignMatchAll(`sh`, `${__dirname}/jvm/match-all.sh`, engineValue, text, patternValue, flagsValue);
     },
   },
+  GO: {
+    value: `go`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`sh`, `${__dirname}/go/match-all.sh`, engineValue, text, patternValue, flagsValue);
+    },
+  },
+  RUST: {
+    value: `rust`,
+    matchAll(engineValue, text, patternValue, flagsValue) {
+      return foreignMatchAll(`sh`, `${__dirname}/rust/match-all.sh`, engineValue, text, patternValue, flagsValue);
+    },
+  },
   PCRE1: {
     value: `pcre1`,
     matchAll(engineValue, text, patternValue, flagsValue) {

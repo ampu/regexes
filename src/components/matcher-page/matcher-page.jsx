@@ -55,8 +55,8 @@ const submitMatchAll = async (requestId, engineValues, text, pattern, flagsValue
   }
   if (remoteEngineValues.length > 0) {
     try {
-      const remoteData = await matchProvider.matchAll(requestId, remoteEngineValues, text, pattern, flagsValue);
-      results.push(...remoteData.results);
+      const remoteResults = await matchProvider.matchAll(requestId, remoteEngineValues, text, pattern, flagsValue);
+      results.push(...remoteResults);
     } catch (exception) {
       results.push({engineValue: REMOTE_ENGINES_KEY, error: {message: exception.message}});
     }
