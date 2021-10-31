@@ -25,7 +25,7 @@ end
 # flags = $2.nil? ? '' : $2
 
 begin
-    regexpObject = flagsValue == '' ? Regexp.new(patternValue) : Regexp.new('(?' + flagsValue + ')' + patternValue)
+    regexpObject = flagsValue == '' ? Regexp.new('(' + patternValue + ')') : Regexp.new('((?' + flagsValue + ')' + patternValue + ')')
 rescue
     exitWithResponse({engineValue: engineValue, error: {message: 'invalid pattern'}})
 end
