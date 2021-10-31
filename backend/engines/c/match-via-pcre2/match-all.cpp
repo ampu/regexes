@@ -120,17 +120,17 @@ int main(int argc, char** argv) {
       }
 
       PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(matchData);
-      for (int i = 0; i < groupCount; i++) {
+//      for (int i = 0; i < groupCount; i++) {
           std::string substring(
-            text + ovector[2 * i],
-            text + ovector[2 * i + 1]
+            text + ovector[0],
+            text + ovector[1]
           );
           match match = {
-            ovector[2 * i],
+            ovector[0],
             substring,
           };
           matches.push_back(match);
-      }
+//      }
       offset = ovector[1];
     }
     exit_with_match(engineValue, matches);

@@ -116,17 +116,17 @@ int main(int argc, char** argv) {
       if (groupCount <= 0) {
           exit_with_error(engineValue, ERROR_RUNTIME);
       }
-      for (int i = 0; i < groupCount; i++) {
-          std::string substring(
-            text + ovector[2 * i],
-            text + ovector[2 * i + 1]
-          );
-          match match = {
-            ovector[2 * i],
-            substring,
-          };
-          matches.push_back(match);
-      }
+
+      std::string substring(
+        text + ovector[0],
+        text + ovector[1]
+      );
+      match match = {
+        ovector[0],
+        substring,
+      };
+      matches.push_back(match);
+
       offset = ovector[1];
     }
     exit_with_match(engineValue, matches);
