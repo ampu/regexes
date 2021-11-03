@@ -8,6 +8,7 @@ module.exports = {
     cors: {
       origin: [
         `http://localhost:3000`,
+        `https://localhost:3000`,
         `https://ampu.github.io`,
       ],
     },

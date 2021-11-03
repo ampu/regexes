@@ -1,8 +1,9 @@
 import React from 'react';
+import getClassName from 'classnames';
 
 import {LocalPath} from 'constants/local-path';
 import {Engine, ENGINES, findEngineByValue} from 'constants/engine';
-import {localMatchAll} from 'helpers/match-helpers';
+import {localMatchAll, groupResults} from 'helpers/match-helpers';
 import {generateId} from 'shared/helpers/id-helpers';
 import {formatTotalSeconds} from 'shared/helpers/date-helpers';
 import {matchProvider} from 'providers/match-provider';
@@ -51,12 +52,12 @@ const submitMatchAll = async (requestId, engineValues, text, pattern, flagsValue
   const results = [];
   if (engineValues.includes(localEngineValue)) {
     const result = localMatchAll(localEngineValue, text, pattern, flagsValue);
-    results.push(result);
+    results.push({...result, text});
   }
   if (remoteEngineValues.length > 0) {
     try {
       const remoteResults = await matchProvider.matchAll(requestId, remoteEngineValues, text, pattern, flagsValue);
-      results.push(...remoteResults);
+      results.push(...remoteResults.map((result) => ({...result, text})));
     } catch (exception) {
       results.push({engineValue: REMOTE_ENGINES_KEY, error: {message: exception.message}});
     }
@@ -84,6 +85,7 @@ const MatcherPage = () => {
   const [pattern, setPattern] = React.useState(``);
   const [flags, setFlags] = React.useState([]);
   const [results, setResults] = React.useState(EMPTY_RESULTS);
+  const [isStale, setStale] = React.useState(false);
   const [requestId, setRequestId] = React.useState();
   const requestIdRef = React.useRef();
 
@@ -103,12 +105,13 @@ const MatcherPage = () => {
     const flagsValue = flags.map((flag) => flag.value).join(``);
 
     setRequestId(requestIdRef.current = localRequestId);
-    setResults(EMPTY_RESULTS);
+    setStale(true);
 
     submitMatchAll(localRequestId, engineValues, text, pattern, flagsValue)
       .then((localResults) => {
         if (requestIdRef.current === localRequestId) {
           setResults(localResults);
+          setStale(false);
           setRequestId(requestIdRef.current = undefined);
         }
       })
@@ -128,7 +131,7 @@ const MatcherPage = () => {
   }, [engines]);
 
   React.useEffect(() => {
-    setResults(EMPTY_RESULTS);
+    setStale(true);
   }, [text, pattern, flags]);
 
   return <>
@@ -138,7 +141,7 @@ const MatcherPage = () => {
       <div className="matcher-page__inner">
         <form method="post" action={LocalPath.MATCH_ALL}>
           <fieldset className="matcher-page__item">
-            <legend className="matcher-page__item-title">Engines</legend>
+            <legend className="matcher-page__engine-title">Engines</legend>
             <div className="matcher-page__engines-inner">
               {Object.values(Engine).map((engine) => {
                 return (
@@ -159,7 +162,7 @@ const MatcherPage = () => {
           </fieldset>
 
           <div className="matcher-page__item">
-            <label className="matcher-page__item-title">Text</label>
+            <label className="matcher-page__engine-title">Text</label>
             <textarea
               name="text"
               rows="3"
@@ -169,7 +172,7 @@ const MatcherPage = () => {
           </div>
 
           <div className="matcher-page__item">
-            <label htmlFor="matcher-pattern" className="matcher-page__item-title">Pattern (regular expression)</label>
+            <label htmlFor="matcher-pattern" className="matcher-page__engine-title">Pattern (regular expression)</label>
             <div className="matcher-page__pattern-inner">
               <input
                 id="matcher-pattern"
@@ -213,13 +216,15 @@ const MatcherPage = () => {
               <span>No engines checked. Please select one...</span>
             </li>
           )}
-          {engines.length > 0 && results.length === 0 && (
+          {engines.length > 0 && (results.length === 0 || isStale) && (
             <li key={ALL_ENGINES_KEY} className="matcher-page__item">
               {!requestId && <span>Click «Match All» button to receive results...</span>}
               {requestId && <span>Evaluating...</span>}
             </li>
           )}
-          {results.length > 0 && results.map(({engineValue, performance, matches, error}) => {
+          {results.length > 0 && groupResults(results).map((group) => {
+            const {engineValue: groupKey, matches, error, text: groupText} = group[0];
+
             let subtitle = ``;
             if (error) {
               subtitle = `Error`;
@@ -229,15 +234,24 @@ const MatcherPage = () => {
               subtitle = `Matches`;
             }
 
-            const engine = findEngineByValue(engineValue);
-
             return (
-              <li key={engineValue} className="matcher-page__item">
-                <h2 className="matcher-page__item-title">
-                  {engine ? engine.title : engineValue} - {subtitle}
-                  {Number.isFinite(performance) &&
-                  <span className="matcher-page__result-performance"> (in {formatTotalSeconds(performance)}s)</span>}
+              <li key={groupKey} className={getClassName(`matcher-page__item`, isStale && `stale`)}>
+                <h2 className="matcher-page__group-title">
+                  {subtitle} {group.length > 1 && `(${group.length} engines)`}
                 </h2>
+                {group.map(({engineValue, performance}) => {
+                  const engine = findEngineByValue(engineValue);
+
+                  return (
+                    <h3 key={engineValue} className="matcher-page__group-item-title">
+                      {engine ? engine.title : engineValue}
+                      {Number.isFinite(performance) &&
+                      <span
+                        className="matcher-page__result-performance"
+                      > (in {formatTotalSeconds(performance)}s)</span>}
+                    </h3>
+                  );
+                })}
                 {error && <>
                   <span>{error.message}</span>
                 </>}
@@ -250,7 +264,7 @@ const MatcherPage = () => {
                 </>}
                 {!error && (
                   <p className="matcher-page__text-with-matches">
-                    {getSubstrings(text, matches).map((substring, substringIndex) => {
+                    {getSubstrings(groupText, matches).map((substring, substringIndex) => {
                       return substringIndex % 2 === 1
                         ? <b key={substringIndex}>{substring}</b>
                         : <span key={substringIndex}>{substring}</span>;

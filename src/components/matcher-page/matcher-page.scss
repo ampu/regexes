@@ -2,7 +2,7 @@
   @include container;
 
   flex-grow: 1;
-  padding: 60px;
+  padding: 30px 60px;
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
@@ -65,10 +65,38 @@
   flex-flow: column;
 
   border: none;
+
+  &.stale {
+    opacity: 0.2;
+    filter: grayscale(100%);
+  }
 }
 
-.matcher-page__item-title {
+.matcher-page__group-title {
   margin: 0;
+  margin-bottom: 5px;
+  padding: 0;
+
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.matcher-page__group-item-title {
+  margin: 0;
+  padding: 0;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  &:last-of-type {
+    margin-bottom: 10px;
+  }
+}
+
+.matcher-page__engine-title {
+  margin: 0;
+  margin-bottom: 5px;
   padding: 0;
 
   font-size: 18px;
