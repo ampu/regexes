@@ -13,6 +13,8 @@ const logger = require(`./modules/logger`);
 
 const {formatTimespan} = require(`../shared/helpers/date-helpers`);
 
+const env = require(`dotenv`).config({path: `.env.local`}).parsed;
+
 const app = express();
 
 app.use(cors(config.http.cors))
@@ -45,7 +47,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(compression({filter: compression.filter}));
-app.use(express.static(`public`));
+app.use(express.static(`build`));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -55,7 +57,7 @@ app.post(`/match-all`, matchController.matchAll);
 const server = (() => {
   const port = process.env.PORT || config.http.port;
 
-  if (config.http.isHttps) {
+  if (env.HTTPS) {
     const [serverKey, serverCert] = fs.readFileSync(`${__dirname}/../node_modules/webpack-dev-server/ssl/server.pem`, `utf-8`)
       .split(/(?<=-----)\s+(?=-----)/);
 

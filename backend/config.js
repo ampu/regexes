@@ -1,6 +1,5 @@
 module.exports = {
   http: {
-    isHttps: false,
     port: 5000,
     authorization: {
       name: `admin`,
