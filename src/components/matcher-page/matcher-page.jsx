@@ -9,7 +9,6 @@ import {formatTotalSeconds} from 'shared/helpers/date-helpers';
 import {matchProvider} from 'providers/match-provider';
 import {enginesStore} from 'providers/engines-store';
 
-const ALL_ENGINES_KEY = `all`;
 const REMOTE_ENGINES_KEY = `remote`;
 const EMPTY_RESULTS = [];
 
@@ -212,12 +211,12 @@ const MatcherPage = () => {
 
         <ul className="matcher-page__results">
           {engines.length === 0 && (
-            <li key={ALL_ENGINES_KEY} className="matcher-page__item">
+            <li key="no-engines" className="matcher-page__item">
               <span>No engines checked. Please select one...</span>
             </li>
           )}
           {engines.length > 0 && (results.length === 0 || isStale) && (
-            <li key={ALL_ENGINES_KEY} className="matcher-page__item">
+            <li key="can-match" className="matcher-page__item">
               {!requestId && <span>Click «Match All» button to receive results...</span>}
               {requestId && <span>Evaluating...</span>}
             </li>

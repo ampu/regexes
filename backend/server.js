@@ -52,15 +52,21 @@ app.use(bodyParser.json());
 const matchController = require(`./controllers/match-controller`);
 app.post(`/match-all`, matchController.matchAll);
 
-// const server = require(`http`)
-//   .createServer(app)
-//   .listen(config.http.port, () => logger.info(`http://*:${config.http.port}/listen`));
+const server = (() => {
+  const port = process.env.PORT || config.http.port;
 
-const [serverKey, serverCert] = fs.readFileSync(`${__dirname}/../node_modules/webpack-dev-server/ssl/server.pem`, `utf-8`)
-  .split(/(?<=-----)\s+(?=-----)/);
+  if (config.http.isHttps) {
+    const [serverKey, serverCert] = fs.readFileSync(`${__dirname}/../node_modules/webpack-dev-server/ssl/server.pem`, `utf-8`)
+      .split(/(?<=-----)\s+(?=-----)/);
 
-const server = require(`https`)
-  .createServer({key: serverKey, cert: serverCert}, app)
-  .listen(config.http.port, () => logger.info(`https://*:${config.http.port}/listen`));
+    return require(`https`)
+      .createServer({key: serverKey, cert: serverCert}, app)
+      .listen(port, () => logger.info(`https://*:${port}/listen`));
+  }
+
+  return require(`http`)
+    .createServer(app)
+    .listen(port, () => logger.info(`http://*:${port}/listen`));
+})();
 
 module.exports = {app, server};
