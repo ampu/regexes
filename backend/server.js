@@ -13,7 +13,8 @@ const logger = require(`./modules/logger`);
 
 const {formatTimespan} = require(`../shared/helpers/date-helpers`);
 
-const env = require(`dotenv`).config({path: `.env.local`}).parsed;
+const env = require(`dotenv`).config({path: `.env.local`}).parsed
+  || require(`dotenv`).config().parsed;
 
 const app = express();
 
