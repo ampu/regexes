@@ -51,7 +51,7 @@ func exitWithMatch(engineValue string, matches []match) {
 }
 
 func main() {
-   var engineValue = ""
+   var engineValue = "go"
    if len(os.Args) > 1 {
        engineValue = os.Args[1]
    }

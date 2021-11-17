@@ -56,7 +56,8 @@ const Engine = {
   GO: {
     value: `go`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(`sh`, `${__dirname}/go/match-all.sh`, engineValue, text, patternValue, flagsValue);
+      //return foreignMatchAll(`sh`, `${__dirname}/go/match-all.sh`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(``, `${__dirname}/../../bin/match-all-go`, engineValue, text, patternValue, flagsValue);
     },
   },
   RUST: {
