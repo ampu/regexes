@@ -1,6 +1,6 @@
 #!/bin/sh
 
-clang++ -Wno-c++11-extensions -Wno-deprecated \
+"${CLANG_BIN:-clang++}" -Wno-c++11-extensions -Wno-deprecated \
   -o bin/match-all \
   match-all.cpp \
   ../frozen/frozen.c \
