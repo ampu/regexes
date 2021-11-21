@@ -69,13 +69,13 @@ const Engine = {
   PCRE1: {
     value: `pcre1`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(``, `${__dirname}/c/match-via-pcre/bin/match-all`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(``, `${__dirname}/c/match-via-pcre/bin/match-all-via-c`, engineValue, text, patternValue, flagsValue);
     },
   },
   PCRE2: {
     value: `pcre2`,
     matchAll(engineValue, text, patternValue, flagsValue) {
-      return foreignMatchAll(``, `${__dirname}/c/match-via-pcre2/bin/match-all`, engineValue, text, patternValue, flagsValue);
+      return foreignMatchAll(``, `${__dirname}/c/match-via-pcre2/bin/match-all-via-c`, engineValue, text, patternValue, flagsValue);
     },
   },
 };
