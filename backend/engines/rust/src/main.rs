@@ -26,6 +26,7 @@ struct ErrorResponse {
     error: String,
 }
 
+#[allow(dead_code)]
 fn exit_with_error(engine_value: &str, error: &str) {
     let response = ErrorResponse {
         engine_value: engine_value.to_string(),
