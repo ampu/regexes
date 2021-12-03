@@ -2,4 +2,13 @@
 .gradle
 
 # Ignore Gradle build output directory
-build
+/build/
+
+/app/build/classes/
+/app/build/distributions/
+/app/build/kotlin/
+/app/build/scripts/
+/app/build/tmp/
+/app/build/libs/*
+
+!/app/build/libs/app-uber.jar
