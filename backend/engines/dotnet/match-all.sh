@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# cd "$(dirname "$0")" && dotnet run "$1" "$2" "$3" "$4"
+# "$(readlink "$(dirname "$0")/bin/runtime")/dotnet" "$1" "$2" "$3" "$4"
+
 cd "$(dirname "$0")" \
-  && . ../../../.env \
-  && . ../../../.env.local \
-  && bin/Release/net5.0/$DOTNET_RUNTIME/publish/dotnet "$1" "$2" "$3" "$4"
+  && bin/Release/net5.0/*/publish/dotnet "$1" "$2" "$3" "$4"

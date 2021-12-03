@@ -1,2 +1,5 @@
 /obj/
-/bin/
+/bin/*
+!/bin/Release/
+/bin/Release/net5.0/*
+!/bin/Release/net5.0/ubuntu.20.04-x64

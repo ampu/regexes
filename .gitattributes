@@ -6,4 +6,10 @@
 *.webp binary
 *.woff binary
 *.woff2 binary
+
 *.jar binary
+
+*.a binary
+*.dll binary
+*.so binary
+dotnet binary
